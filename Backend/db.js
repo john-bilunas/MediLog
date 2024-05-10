@@ -13,28 +13,28 @@ const connectToDatabase = async () => {
 }
 
 
-const medicationSchema = new mongoose.Schema({
+// const medicationSchema = new mongoose.Schema({
 
-    name: {
-        type: String,
-        required: true
-    },
-    dosage: {
-        amount: {
-            type: Number,
-            required: true
-        },
-        unit: {
-            type: String,
-            required: true
-        }
-    },
-    frequency: {//number of hours between doses
-        type: Number,
-        required: true
-    }
-});
-const MedicationModel = mongoose.model('medication', medicationSchema);
+//     name: {
+//         type: String,
+//         required: true
+//     },
+//     dosage: {
+//         amount: {
+//             type: Number,
+//             required: true
+//         },
+//         unit: {
+//             type: String,
+//             required: true
+//         }
+//     },
+//     frequency: {//number of hours between doses
+//         type: Number,
+//         required: true
+//     }
+// });
+// const MedicationModel = mongoose.model('medication', medicationSchema);
 
 const patientSchema = new mongoose.Schema({
     firstName: {
@@ -84,7 +84,16 @@ const userSchema = new mongoose.Schema( {
     patients: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'patient'
-    }]
+    }], 
+    email: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true,
+        
+    },
 
 });
 const UserModel = mongoose.model('user', userSchema);
@@ -93,5 +102,5 @@ module.exports = {
     connectToDatabase,
     UserModel,
     PatientModel,
-    MedicationModel
+    // MedicationModel
 }

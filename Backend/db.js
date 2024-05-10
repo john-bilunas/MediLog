@@ -20,10 +20,16 @@ const medicationSchema = new mongoose.Schema({
         required: true
     },
     dosage: {
-        type: String,
-        required: true
+        amount: {
+            type: Number,
+            required: true
+        },
+        unit: {
+            type: String,
+            required: true
+        }
     },
-    frequency: {
+    frequency: {//number of hours between doses
         type: Number,
         required: true
     }
@@ -31,7 +37,7 @@ const medicationSchema = new mongoose.Schema({
 const MedicationModel = mongoose.model('medication', medicationSchema);
 
 const patientSchema = new mongoose.Schema({
-    firstname: {
+    firstName: {
         type: String,
         required: true
     },
@@ -75,10 +81,10 @@ const userSchema = new mongoose.Schema( {
         unique: true,
         required: true
     },
-    patients: {
-        type: [mongoose.Schema.Types.ObjectId],
+    patients: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'patient'
-    }
+    }]
 
 });
 const UserModel = mongoose.model('user', userSchema);

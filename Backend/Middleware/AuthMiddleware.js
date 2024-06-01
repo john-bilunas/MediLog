@@ -3,12 +3,7 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = {};
 const {User} = require('../config/db');
 
-//Once the user has been authenticated, set the JWT
-authMiddleware.setJWT = (req, res, next) => {
 
-    
-
-}
 
 
 
@@ -33,7 +28,9 @@ authMiddleware.signJWT = (req, res, next) => {
 
 authMiddleware.validateJWT = (req, res, next) => {
 
-    //get the authorizations header
+   
+    try{
+ //get the authorizations header
     const authorizationHeader = req.headers['authorization'];
     //if there is an authorization header, get the token from it (this removes the word bearer)
     const token = authorizationHeader && authorizationHeader.split(' ')[1];
@@ -45,8 +42,6 @@ authMiddleware.validateJWT = (req, res, next) => {
         req.user = user;
         next();
     })
-    try{
-
 
 
     }catch(err){

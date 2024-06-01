@@ -33,9 +33,13 @@ authController.login  = async(req, res, next) => {
     try{
         const {password,username} = req.body;
         //find user in the database and get hashed password
-        const userInfo = await User.findOne({username});
+        const userInfo = await User.findOne({username}).exec();
         // console.log('User info: ', userInfo)
-        
+        if(!userInfo){
+            const error = new Error('User not found');
+            error.statusCode = 400;
+            throw error;
+        }
         //save _id and username to res.locals for the jwt
         res.locals._id = userInfo._id;
         res.locals.username = userInfo.username;
@@ -52,7 +56,6 @@ authController.login  = async(req, res, next) => {
            return;
         }
     }catch(err){
-        console.error('Error authenticating user', err);
         next(err);
     }
 

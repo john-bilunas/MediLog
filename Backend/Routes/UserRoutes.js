@@ -4,30 +4,30 @@ const userController = require('../Controllers/UserController');
 const authMiddleware = require('../Middleware/AuthMiddleware');
 
 
-//get all users
+
+//get one user
+router.get('/all', (req,res) => {
+
+});
+
+/*
+This is to retrieve all information other than password for the logged in user. The _id will be taken from the JWT, so there is no need to make this parametized.
+
+input: nothing
+output: all user information other than password.
+
+*/
 router.get('/', authMiddleware.validateJWT, userController.getUserInfo, (req,res) => {
 
 });
 
-//get one user
-router.get('/:userId', (req,res) => {
 
-});
-
-//create a user
-router.put('/', (req,res) => {
-
-});
 
 //update a user (overwrite)
 router.put('/:userId', (req,res) => {
 
 });
 
-//update a user (certain properties)
-router.patch('/:userId', (req,res) => {
-
-});
 
 //delete a user
 router.delete('/:userId', (req,res) => {

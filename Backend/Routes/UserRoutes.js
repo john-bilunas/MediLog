@@ -6,8 +6,8 @@ const authMiddleware = require('../Middleware/AuthMiddleware');
 
 
 //get one user
-router.get('/all', (req,res) => {
-
+router.get('/all',authMiddleware.validateJWT, userController.getAllUsers, (req,res) => {
+//adding verifyJWT to ensure that the user is logged in
 });
 
 /*

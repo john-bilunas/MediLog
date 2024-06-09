@@ -37,7 +37,17 @@ router.post('/log', authMiddleware.validateJWT, patientMiddleware.verifyPatientO
 });
 
 //delete one patient
-router.delete('/:patientId', (req,res) => {
+/*
+input:
+    body:{
+        patientId
+    }
+
+output: Success message
+
+
+*/
+router.delete('/',authMiddleware.validateJWT, patientController.deletePatient, (req,res) => {
     
 });
 

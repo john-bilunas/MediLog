@@ -44,9 +44,17 @@ router.put('/', authMiddleware.validateJWT, userController.updateUserInfo, userC
 
 });
 
+/*
+    This will delete the user from the database.
+    Before this route can be complete, we need to delete all of the medications, and then the patients
+    -input: nothing
+    -output: success message
+
+*/
 
 //delete a user
-router.delete('/:userId', (req,res) => {
+router.delete('/',authMiddleware.validateJWT,userController.deleteUser, (req,res) => {
+
 
 });
 

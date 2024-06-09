@@ -4,6 +4,7 @@ const Patient = require('../Models/PatientModel');
 const authMiddleware = require('../Middleware/AuthMiddleware');
 const patientController = require('../Controllers/PatientController');
 const patientMiddleware = require('../Middleware/PatientMiddleware');
+const medicationController = require('../Controllers/MedicationController');
 
 //get all medications
 router.get('/', (req, res) => {
@@ -31,11 +32,26 @@ input:
 output: return medication that has been added to the patient
 
 */
-router.post('/', authMiddleware.validateJWT, patientMiddleware.verifyPatientOfUser, patientController.addMedicationToPatient ,(req, res) => {
+router.post('/', authMiddleware.validateJWT, patientMiddleware.verifyPatientOfUser, medicationController.addMedicationToPatient ,(req, res) => {
 
 });
+
+
+/* DELETE MEDICATION
+input:
+    body{
+        patientId,
+        medicationId
+    }
+output: Success message
+
+*/
+router.delete('/', authMiddleware.validateJWT, patientMiddleware.verifyPatientOfUser, medicationController.deleteMedication, (req, res) => {
+
+} );
+
 //add a medication (for a patient)
-router.get('/', (req, res) => {
+router.get('/', authMiddleware.validateJWT, (req, res) => {
 
 });
 

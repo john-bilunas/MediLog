@@ -44,51 +44,64 @@ patientController.createPatient = async (req, res, next) => {
 
 };
 
-patientController.addMedicationToPatient = async (req,res,next) => {
 
-    try{
-
-        const {patientId, medication} = req.body;
-        if(
-            !patientId ||
-            !medication.name ||
-            !medication.dosage ||
-            !medication.dosage.amount ||
-            !medication.dosage.unit ||
-            !medication.numberOfHoursBetweenDoses
-        ){
-            const error = new Error('Missing necessary information to add medication to patient.');
-            error.statusCode = 400;
-            throw error;
-        }
-        //create a new medciation document
-        const medicationDoc = new Medication({
-            name: medication.name,
-            dosage: {
-                amount: medication.dosage.amount,
-                unit: medication.dosage.unit
-            },
-            numberOfHoursBetweenDoses: medication.numberOfHoursBetweenDoses
-        });
-        //save
-        const newMedication = await medicationDoc.save();
-        //add medication document to patient
-        const patient = await Patient.findById(patientId).exec();
-        patient.medications.push(newMedication._id);
-        await patient.save();
-
-        res.status(200).json(newMedication);
-
-
-    }catch(err){
-        next(err)
-    }
-
-}
 
 
 patientController.addLogToPatient = async (req,res,next) => {
 
+}
+
+patientController.deletePatient = async (req, res, next) => {
+
+
+    try{
+
+        const userInfo = await User.findById(req.user._id).populate({
+            path: 'patients',
+            populate: {
+                path: 'medications'
+            }
+        }).exec();
+        // console.log('userInfo id : ', userInfo._id.toString());
+        // console.log('userInfo: ', userInfo);
+        if(!userInfo){
+            const error = new Error('User not found');
+            error.statusCode = (400);
+            throw error;
+        }
+        //get patient Id
+        const {patientId} = req.body;
+
+        //get medicaiton info from the patient
+        let patientToDelete;
+        for(let i = 0; i < userInfo.patients.length; i++){
+            if(userInfo.patients[i]._id.toString() === patientId){
+                patientToDelete = userInfo.patients[i];
+            }
+        }
+        //Handle error if patient does not exist for user
+        if(!patientToDelete){
+            const error = new Error('Patient does not exist for user.');
+            error.statusCode = 400;
+            throw error;
+        }
+        //generate an array of all of the meds for the patient
+        const medsToDelete = [];
+        for(let i = 0; i < patientToDelete.medications.length; i++){
+            medsToDelete.push(patientToDelete.medications[i]._id.toString())
+        }
+
+        //delete meds
+        await Medication.deleteMany( { "_id" : { "$in": medsToDelete}});
+        
+        //delete patient
+        await Patient.deleteOne({"_id": patientId})
+
+
+        res.json({"Success": "Patient and their medications have been deleted."});
+    }catch(err){
+        next(err)
+    }
 }
 
 

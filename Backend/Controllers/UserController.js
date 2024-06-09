@@ -1,6 +1,8 @@
 
-
+const mongoose = require('mongoose');
 const User = require('../Models/UserModel');
+const Patient = require('../Models/PatientModel');
+const Medication = require('../Models/MedicationModel')
 
 
 
@@ -93,6 +95,64 @@ userController.getAllUsers = async (req, res, next) => {
     }catch(err){
         next(err)
     }
+
+}
+
+userController.deleteUser = async (req, res, next) => {
+
+    //create a session and start a transaction
+    // const session =  await mongoose.startSession();
+    // session.startTransaction();
+
+    try{
+
+        //get user
+        const userInfo = await User.findById(req.user._id).populate({
+            path: 'patients',
+            populate: {
+                path: 'medications'
+            }
+        }).exec();
+        if(!userInfo){
+            const error = new Error('User not found');
+            error.statusCode = (400);
+            throw error;
+        }
+        //iterate through all patients
+        const patientSet = new Set();
+        const medicationSet = new Set();
+        userInfo.patients.map((el) => {
+            patientSet.add(el._id.toString());
+            // console.log(el.medications)
+            if(el.medications){
+               for(let i = 0; i < el.medications.length; i++){
+                medicationSet.add(el.medications[i]._id.toString());
+            } 
+            }
+            
+        });
+        
+        patientsArray = [...patientSet];
+        medicationsArray = [...medicationSet];
+
+        console.log(patientsArray)
+        console.log(medicationsArray)
+
+        const deletedMeds = await Medication.deleteMany({ "_id": {"$in": medicationsArray}});
+        const deletedPatients = await Patient.deleteMany({ "_id": {"$in": patientsArray}});
+        const deletedUser = await User.deleteOne({"_id": req.user._id});
+
+        res.json({"Success": "User and all referenced patients and their medications have all been deleted."});
+    }catch(err){
+        next(err)
+    }finally{
+        
+    }
+
+    
+
+
+
 
 }
 

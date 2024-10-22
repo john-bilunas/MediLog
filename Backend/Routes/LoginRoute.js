@@ -14,5 +14,8 @@ router.post('/', authController.login, authMiddleware.signJWT,(req, res) => {
 
 
 })
+router.post('/verifyJWT',authMiddleware.validateJWT, (req,res) => {
 
+    res.statusCode(200).json({"valid": true})
+} );
 module.exports = router;

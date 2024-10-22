@@ -17,8 +17,8 @@ authMiddleware.signJWT = (req, res, next) => {
          }
 
          //sign the jwt
-         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h'});
-         res.json({ accessToken:accessToken });
+         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)//, { expiresIn: '24h'}); // temporarily remove this while testing
+         res.json({ accessToken:accessToken, name: res.locals.name, username: res.locals.username, id: res.locals._id });
 
 
     }catch(err){
@@ -32,9 +32,10 @@ authMiddleware.validateJWT = (req, res, next) => {
     try{
  //get the authorizations header
     const authorizationHeader = req.headers['authorization'];
+    console.log('authorizationHeader', authorizationHeader)
     //if there is an authorization header, get the token from it (this removes the word bearer)
     const token = authorizationHeader && authorizationHeader.split(' ')[1];
-
+        console.log('authorizationHeader', authorizationHeader)
     if(token === null) return res.sendStatus(401);
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {

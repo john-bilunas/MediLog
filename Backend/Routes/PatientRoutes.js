@@ -32,8 +32,40 @@ input:
 output: return medication that has been added to the patient
 
 */
-router.post('/log', authMiddleware.validateJWT, patientMiddleware.verifyPatientOfUser,medicationMiddleware.verifyMedicationOfPatient, patientController.addLogToPatient ,(req, res) => {
+router.post('/log' , authMiddleware.validateJWT,patientMiddleware.verifyPatientOfUser ,medicationMiddleware.verifyMedicationOfPatient,patientController.addLogToPatient,(req, res) => {
+    
+});
 
+
+//delete log
+/*
+input:
+    body{
+        patientId,
+        logId
+
+    }
+output: return success message
+
+*/
+router.delete('/log' , authMiddleware.validateJWT,patientMiddleware.verifyPatientOfUser ,patientController.deleteLog,(req, res) => {
+    
+});
+
+//update one patient
+/*
+input:
+    body{
+        patientId,
+        firstname: firstname,
+        lastname: lastname
+
+    }
+output: Success message
+
+*/
+router.put('/' , authMiddleware.validateJWT,patientMiddleware.verifyPatientOfUser ,patientController.updatePatient,(req, res) => {
+    
 });
 
 //delete one patient
@@ -52,6 +84,13 @@ router.delete('/',authMiddleware.validateJWT, patientController.deletePatient, (
 });
 
 
+router.get('/log/:patientId',authMiddleware.validateJWT, patientController.getMedInfo, (req,res) => {
+    
+}); 
+
+// router.get('/log/:patientId', (req,res) => {
+//     res.json({params: req.params});
+// }); 
 
 
 module.exports = router;

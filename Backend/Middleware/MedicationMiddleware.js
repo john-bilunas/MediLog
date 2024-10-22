@@ -9,7 +9,7 @@ medicationMiddleware.verifyMedicationOfPatient = async (req, res, next) => {
         const {patientId, medication, date} = req.body;
 
         const patient = await Patient.findById(patientId).exec();
-
+        console.log('adding med log to patient')
         //if patient cannot be found, throw error
         if(!patient){
             const error = new Error('Patient could not be found');
@@ -23,14 +23,9 @@ medicationMiddleware.verifyMedicationOfPatient = async (req, res, next) => {
             throw error;
         }
         
-        patient.log.push({
-            medication:medication,
-            date:date
-        })
-        await patient.save();
         res.status(200).json(patient);
 
-
+        next();
 
 
     }catch(err){

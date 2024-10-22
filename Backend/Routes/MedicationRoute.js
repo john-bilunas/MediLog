@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
 
 //get one medication
 router.get('/:id', (req, res) => {
+    
 
 });
 

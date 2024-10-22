@@ -10,7 +10,6 @@ patientMiddleware.verifyPatientOfUser = async (req, res, next) => {
 
         //pull patientId off of body
         const {patientId} = req.body;
-
         //get user id
         const userId = req.user._id;
         if(!userId){
@@ -20,6 +19,7 @@ patientMiddleware.verifyPatientOfUser = async (req, res, next) => {
         //get user mongoose doc
         const user = await User.findById(userId);
 
+        console.log("user:", user)
         //check if the patientId exists in the users patients array
         if(user.patients.includes(patientId)){
             //grant access to altering patient document
@@ -35,5 +35,42 @@ patientMiddleware.verifyPatientOfUser = async (req, res, next) => {
 
 
 }
+
+// patientMiddleware.verifyMedicationOfPatient = async (req, res, next) => {
+
+//     try{
+
+//         //pull patientId off of body
+//         const {patientId, logId} = req.body;
+
+//         //get user id
+//         const userId = req.user._id;
+//         if(!userId){
+//             const error = new Error('User cannot be found');
+//             error.statusCode = 404;
+//         }
+//         //get user mongoose doc
+//         const patient = await Patient.findById(patientId);
+
+//         console.log("patient:", patient)
+//         //check if the patientId exists in the users patients array
+//         /*
+        
+//             LEFT OFF HERE
+//         */
+//         if(patient.includes(patientId)){
+//             //grant access to altering patient document
+//             return next()
+//         }else{
+//             const error = new Error('You do not have access to alter patient data.');
+//             error.statusCode = 404;
+//             throw error;
+//         }
+//     }catch(err){
+//         next(err)
+//     }
+
+
+// }
 
 module.exports = patientMiddleware;
